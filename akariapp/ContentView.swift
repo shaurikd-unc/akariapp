@@ -9,7 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        MainView()
+        NavigationView {
+            MainView()
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
+        }
     }
 }
 
@@ -21,15 +25,18 @@ struct MainView: View {
             VStack  {
                 HStack {
                     Spacer()
-                    Image(systemName: "gear")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 50, weight: .medium, design: .default))
-                        .padding()
+                    NavigationLink(destination: Text("tbd - settings"), label: {
+                        Image(systemName: "gear")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 50, weight: .medium, design: .default))
+                            .padding()
+                    })
                 }
                 Spacer()
                 Image("title_logo")
                     .resizable()
                     .scaledToFit()
+                
                 Image("lit_bulb")
                     .padding(.horizontal)
                 
@@ -43,8 +50,8 @@ struct MainView: View {
 
 struct MenuButtons: View {
     var body: some View {
-        VStack(spacing: 30) {
-            NavigationLink(destination: Text("Levels"), label: {
+        VStack(spacing: 20) {
+            NavigationLink(destination: Text("tbd - levels"), label: {
                 Text("Levels")
                     .bold()
                     .frame(width: 280, height: 50)
@@ -53,7 +60,7 @@ struct MenuButtons: View {
                     .cornerRadius(10)
             })
             
-            NavigationLink(destination: Text("How to play"), label: {
+            NavigationLink(destination: Text("tbd - how to play"), label: {
                 Text("How To Play")
                     .bold()
                     .frame(width: 280, height: 50)
@@ -62,7 +69,7 @@ struct MenuButtons: View {
                     .cornerRadius(10)
             })
             
-            NavigationLink(destination: Text("Rate us"), label: {
+            NavigationLink(destination: Text("tbd - rate us"), label: {
                 Text("Rate Us")
                     .bold()
                     .frame(width: 280, height: 50)
@@ -71,7 +78,7 @@ struct MenuButtons: View {
                     .cornerRadius(10)
             })
             
-            NavigationLink(destination: Text("High scores"), label: {
+            NavigationLink(destination: Text("tbd - high scores"), label: {
                 Text("High Scores")
                     .bold()
                     .frame(width: 280, height: 50)
