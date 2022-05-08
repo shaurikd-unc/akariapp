@@ -18,6 +18,9 @@ struct ContentView: View {
 }
 
 struct MainView: View {
+    
+    @State private var switchedOn = true
+    
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color("Background")], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -33,12 +36,8 @@ struct MainView: View {
                     })
                 }
                 Spacer()
-                Image("title_logo")
-                    .resizable()
-                    .scaledToFit()
                 
-                Image("lit_bulb")
-                    .padding(.horizontal)
+                BulbLogo(switchedOn: $switchedOn)
                 
                 Spacer()
                 MenuButtons()
@@ -87,6 +86,23 @@ struct MenuButtons: View {
                     .cornerRadius(10)
             })
         }
+    }
+}
+
+struct BulbLogo: View {
+    
+    @Binding var switchedOn: Bool
+    
+    var body: some View {
+        Image("title_logo")
+            .resizable()
+            .scaledToFit()
+        
+        Image(switchedOn ? "lit_bulb" : "bulb_logo")
+            .padding(.horizontal)
+            .onTapGesture {
+                switchedOn.toggle()
+            }
     }
 }
 
