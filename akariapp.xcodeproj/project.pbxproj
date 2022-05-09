@@ -11,6 +11,11 @@
 		44891CDF282858B10073A489 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44891CDE282858B10073A489 /* ContentView.swift */; };
 		44891CE1282858B20073A489 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44891CE0282858B20073A489 /* Assets.xcassets */; };
 		44891CE4282858B20073A489 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44891CE3282858B20073A489 /* Preview Assets.xcassets */; };
+		44A038EB282965D800A153BA /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038EA282965D800A153BA /* MainMenu.swift */; };
+		44A038ED28296E5100A153BA /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038EC28296E5100A153BA /* Main.swift */; };
+		44A038F028296F9000A153BA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038EF28296F9000A153BA /* Model.swift */; };
+		44A038F3282985E500A153BA /* LevelSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038F2282985E500A153BA /* LevelSelect.swift */; };
+		44A038F52829872900A153BA /* EasyLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038F42829872900A153BA /* EasyLevel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		44891CDE282858B10073A489 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		44891CE0282858B20073A489 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44891CE3282858B20073A489 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		44A038EA282965D800A153BA /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		44A038EC28296E5100A153BA /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		44A038EF28296F9000A153BA /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		44A038F2282985E500A153BA /* LevelSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelect.swift; sourceTree = "<group>"; };
+		44A038F42829872900A153BA /* EasyLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyLevel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +61,8 @@
 		44891CDB282858B10073A489 /* akariapp */ = {
 			isa = PBXGroup;
 			children = (
+				44A038EE28296F8500A153BA /* model */,
+				44A038E9282965CD00A153BA /* views */,
 				44891CDC282858B10073A489 /* akariappApp.swift */,
 				44891CDE282858B10073A489 /* ContentView.swift */,
 				44891CE0282858B20073A489 /* Assets.xcassets */,
@@ -65,6 +77,33 @@
 				44891CE3282858B20073A489 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		44A038E9282965CD00A153BA /* views */ = {
+			isa = PBXGroup;
+			children = (
+				44A038EA282965D800A153BA /* MainMenu.swift */,
+				44A038EC28296E5100A153BA /* Main.swift */,
+				44A038F2282985E500A153BA /* LevelSelect.swift */,
+				44A038F42829872900A153BA /* EasyLevel.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		44A038EE28296F8500A153BA /* model */ = {
+			isa = PBXGroup;
+			children = (
+				44A038F12829725B00A153BA /* level_storage */,
+				44A038EF28296F9000A153BA /* Model.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		44A038F12829725B00A153BA /* level_storage */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = level_storage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,7 +176,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44A038F3282985E500A153BA /* LevelSelect.swift in Sources */,
+				44A038F52829872900A153BA /* EasyLevel.swift in Sources */,
+				44A038F028296F9000A153BA /* Model.swift in Sources */,
 				44891CDF282858B10073A489 /* ContentView.swift in Sources */,
+				44A038ED28296E5100A153BA /* Main.swift in Sources */,
+				44A038EB282965D800A153BA /* MainMenu.swift in Sources */,
 				44891CDD282858B10073A489 /* akariappApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
