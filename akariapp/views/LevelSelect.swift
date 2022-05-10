@@ -13,7 +13,7 @@ struct LevelSelect: View {
             LinearGradient(colors: [Color("Background")], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
             VStack(spacing: 20) {
-                NavigationLink(destination: Text("tbd - easy levels"), label: {
+                NavigationLink(destination: EasyLevel(), label: {
                     Text("EASY")
                         .bold()
                         .frame(width: 280, height: 50)

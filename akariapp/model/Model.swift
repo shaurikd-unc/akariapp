@@ -9,10 +9,67 @@ import Foundation
 import SwiftUI
 import Combine
 
+class GameController: ObservableObject {
+    private var model: GameModel
+    
+    
+    init(model: GameModel) {
+        self.model = model
+    }
+    
+    func clickNextPuzzle() {
+        let current = model.getActivePuzzleIndex()
+        if(current + 1 < model.getPuzzleLibrarySize()) {
+            model.setActivePuzzleIndex(index: current + 1)
+        }
+    }
+    
+    func clickResetPuzzle() {
+        model.resetPuzzle()
+    }
+    
+    func clickCell(r: Int, c: Int) {
+        if(model.getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
+            if (isLamp(r: r, c: c)) {
+                model.removeLamp(r: r, c: c)
+            } else {
+                model.addLamp(r: r, c: c)
+            }
+        }
+    }
+    
+    func isLamp(r: Int, c: Int)  -> Bool {
+        return model.isLamp(r: r, c: c)
+    }
+    
+    func isLit(r: Int, c: Int)  -> Bool {
+        return model.isLit(r: r, c: c)
+    }
+    
+    func isClueSatisfied(r: Int, c: Int)  -> Bool {
+        return model.isClueSatisfied(r: r, c: c)
+    }
+    
+    func isSolved() -> Bool {
+        return model.isSolved()
+    }
+    
+    func getActivePuzzle() -> Puzzle {
+        return model.getActivePuzzle()
+    }
+    
+    func getActivePuzzleIndex() -> Int {
+        return model.getActivePuzzleIndex()
+    }
+    
+    func getLibrarySize() -> Int {
+        return model.getPuzzleLibrarySize()
+    }
+}
 
 class GameModel: ObservableObject {
-    var library: PuzzleLibrary
-    var curr: Int
+    private var library: PuzzleLibrary
+    private var curr: Int
     @Published var lamps: [[Int]]
     
     init() {
