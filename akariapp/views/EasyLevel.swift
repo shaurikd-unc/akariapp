@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EasyLevel: View {
     
-    let model = GameModel()
+    @ObservedObject var model = GameModel()
     
     var body: some View {
         ZStack {
@@ -24,8 +24,7 @@ struct EasyLevel: View {
 //                    Text("1:25")
 //                }
 
-                EasyGameGrid(controller: GameController(model: model))
-                
+                EasyGameGrid(model: model)
             }
         }
     }
@@ -33,35 +32,50 @@ struct EasyLevel: View {
 
 struct EasyGameGrid: View {
     
-    let controller: GameController
+    @ObservedObject var model: GameModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: 1) {
             ForEach(0...6, id: \.self) {r in
-                HStack {
+                HStack(spacing: 1){
                     ForEach(0...6, id: \.self) {c in
-//                        switch(controller.getActivePuzzle().getCellType(r: r, c: c)) {
-//                            case .CORRIDOR:
-//                                break
-//                            case .CLUE:
-//                                break
-//                            case .WALL:
-//                                break
-//                        }
-
-                        Button(action: {
-                            controller.clickCell(r: r, c: c)
-                            }) {
-                                Text("")
-                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                    .font(.system(size: 18))
+                        switch(model.getActivePuzzle().getCellType(r: r, c: c)) {
+                            case .CORRIDOR:
+                                Button(action: {
+                                    model.clickCell(r: r, c: c)
+                                    }) {
+                                        Text(model.isLamp(r: r, c: c) ? "l" : " ")
+                                            .frame(minWidth: 0, maxWidth: 15)
+                                            .font(.system(size: 16))
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 0)
+//                                                    .stroke(.white, lineWidth: 2)
+                                                    .stroke(model.isLit(r: r, c: c) ? .yellow : .white, lineWidth: 2)
+                                        )
+                                    }
+                            case .CLUE:
+                                Text("\(model.getActivePuzzle().getClue(r: r, c: c))")
+                                    .frame(minWidth: 0, maxWidth: 15)
+                                    .font(.system(size: 16))
                                     .padding()
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 0)
-                                            .stroke(Color.white, lineWidth: 2)
+                                            .stroke(Color.black, lineWidth: 2)
                                 )
-                            }
+                            case .WALL:
+                                Text("w")
+                                    .frame(minWidth: 0, maxWidth: 15)
+                                    .font(.system(size: 16))
+                                    .padding()
+                                    .foregroundColor(.black)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 0)
+                                            .stroke(Color.black, lineWidth: 2)
+                                )
+                        }
                     }
                 }
             }

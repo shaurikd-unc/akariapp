@@ -9,64 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-class GameController: ObservableObject {
-    private var model: GameModel
-    
-    
-    init(model: GameModel) {
-        self.model = model
-    }
-    
-    func clickNextPuzzle() {
-        let current = model.getActivePuzzleIndex()
-        if(current + 1 < model.getPuzzleLibrarySize()) {
-            model.setActivePuzzleIndex(index: current + 1)
-        }
-    }
-    
-    func clickResetPuzzle() {
-        model.resetPuzzle()
-    }
-    
-    func clickCell(r: Int, c: Int) {
-        if(model.getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
-            if (isLamp(r: r, c: c)) {
-                model.removeLamp(r: r, c: c)
-            } else {
-                model.addLamp(r: r, c: c)
-            }
-        }
-    }
-    
-    func isLamp(r: Int, c: Int)  -> Bool {
-        return model.isLamp(r: r, c: c)
-    }
-    
-    func isLit(r: Int, c: Int)  -> Bool {
-        return model.isLit(r: r, c: c)
-    }
-    
-    func isClueSatisfied(r: Int, c: Int)  -> Bool {
-        return model.isClueSatisfied(r: r, c: c)
-    }
-    
-    func isSolved() -> Bool {
-        return model.isSolved()
-    }
-    
-    func getActivePuzzle() -> Puzzle {
-        return model.getActivePuzzle()
-    }
-    
-    func getActivePuzzleIndex() -> Int {
-        return model.getActivePuzzleIndex()
-    }
-    
-    func getLibrarySize() -> Int {
-        return model.getPuzzleLibrarySize()
-    }
-}
-
 class GameModel: ObservableObject {
     private var library: PuzzleLibrary
     private var curr: Int
@@ -75,17 +17,43 @@ class GameModel: ObservableObject {
     init() {
         self.curr = 0
         self.library = PuzzleLibrary()
-        self.lamps = [[]]
+        self.lamps = [
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
+        ]
         let sampleBoard = [
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6],
-            [0, 1, 2, 3, 4, 5, 6]
+            [6, 6, 6, 6, 1, 6, 6],
+            [6, 6, 6, 5, 6, 6, 6],
+            [0, 6, 6, 6, 6, 6, 6],
+            [6, 5, 6, 6, 6, 4, 6],
+            [6, 6, 6, 6, 6, 6, 5],
+            [6, 6, 6, 2, 6, 6, 6],
+            [6, 6, 5, 6, 6, 6, 6]
         ]
         self.library.addPuzzle(puzzle: Puzzle(board: sampleBoard))
+//        resetPuzzle()
+    }
+    
+    func clickCell(r: Int, c: Int) {
+        if(getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
+            if (isLamp(r: r, c: c)) {
+                removeLamp(r: r, c: c)
+            } else {
+                addLamp(r: r, c: c)
+            }
+        }
+    }
+    
+    func clickNextPuzzle() {
+        let current = getActivePuzzleIndex()
+        if(current + 1 < getPuzzleLibrarySize()) {
+            setActivePuzzleIndex(index: current + 1)
+        }
     }
     
     func addLamp(r: Int, c: Int) {
@@ -95,10 +63,8 @@ class GameModel: ObservableObject {
     }
     
     func removeLamp(r: Int, c: Int) {
-        func addLamp(r: Int, c: Int) {
-            if(getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
-                lamps[r][c] = 0
-            }
+        if(getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
+            lamps[r][c] = 0
         }
     }
     
@@ -190,62 +156,62 @@ class GameModel: ObservableObject {
     }
 
     func searchDirection(r: Int, c: Int, d: Direction) -> Bool {
-        var r_new = r
-        var c_new = c
+        var r_new: Int = 0
+        var c_new: Int = 0
         
         switch d {
         case .N:
-            r_new -= 1
+            r_new = r - 1
             break
         case .S:
-            r_new += 1
+            r_new = r + 1
             break
         case .E:
-            c_new += 1
+            c_new = c + 1
             break
         case .W:
-            c_new -= 1
+            c_new = c - 1
             break
         }
         
-        if(c_new < 0 || c >= getActivePuzzle().getWidth() || r_new < 0 || r >= getActivePuzzle().getHeight()) {
+        if(c_new < 0 || c_new >= getActivePuzzle().getWidth() || r_new < 0 || r_new >= getActivePuzzle().getHeight()) {
             return false
-        } else if (getActivePuzzle().getCellType(r: r, c: c) == CellType.WALL || getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
+        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CORRIDOR) {
             return false
         } else {
-            if (isLamp(r: r, c: c)){
+            if (isLamp(r: r_new, c: c_new)){
                 return true
             } else {
-                return searchDirection(r: r, c: c, d: d)
+                return searchDirection(r: r_new, c: c_new, d: d)
             }
         }
     }
     
     func checkDirection(r: Int, c: Int, d: Direction) -> Int {
-        var r_new = r
-        var c_new = c
+        var r_new: Int = 0
+        var c_new: Int = 0
         
         switch d {
         case .N:
-            r_new -= 1
+            r_new = r - 1
             break
         case .S:
-            r_new += 1
+            r_new = r + 1
             break
         case .E:
-            c_new += 1
+            c_new = c + 1
             break
         case .W:
-            c_new -= 1
+            c_new = c - 1
             break
         }
         
-        if(c_new < 0 || c >= getActivePuzzle().getWidth() || r_new < 0 || r >= getActivePuzzle().getHeight()) {
+        if(c_new < 0 || c_new >= getActivePuzzle().getWidth() || r_new < 0 || r_new >= getActivePuzzle().getHeight()) {
             return 0
-        } else if (getActivePuzzle().getCellType(r: r, c: c) == CellType.WALL || getActivePuzzle().getCellType(r: r, c: c) == CellType.CORRIDOR) {
+        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CORRIDOR) {
             return 0
         } else {
-            if (isLamp(r: r, c: c)){
+            if (isLamp(r: r_new, c: c_new)){
                 return 1
             } else {
                 return 0
@@ -293,11 +259,11 @@ class Puzzle {
     }
     
     func getCellType(r: Int, c: Int) -> CellType {
-        let c = self.board[r][c]
+        let col = self.board[r][c]
         
-        if (c >= 0 && c <= 4) {
+        if (col >= 0 && col <= 4) {
             return CellType.CLUE
-        } else if(c == 5) {
+        } else if(col == 5) {
             return CellType.WALL
         } else {
             return CellType.CORRIDOR
