@@ -26,7 +26,7 @@ class GameModel: ObservableObject {
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0]
         ]
-        let sampleBoard = [
+        let board1 = [
             [6, 6, 6, 6, 1, 6, 6],
             [6, 6, 6, 5, 6, 6, 6],
             [0, 6, 6, 6, 6, 6, 6],
@@ -35,8 +35,17 @@ class GameModel: ObservableObject {
             [6, 6, 6, 2, 6, 6, 6],
             [6, 6, 5, 6, 6, 6, 6]
         ]
-        self.library.addPuzzle(puzzle: Puzzle(board: sampleBoard))
-//        resetPuzzle()
+        self.library.addPuzzle(puzzle: Puzzle(board: board1))
+        let board2 = [
+            [5, 6, 6, 6, 6, 6, 1],
+            [6, 6, 6, 6, 0, 6, 6],
+            [6, 5, 6, 6, 6, 6, 6],
+            [6, 6, 6, 1, 6, 6, 6],
+            [6, 6, 6, 6, 6, 0, 6],
+            [6, 6, 1, 6, 6, 6, 6],
+            [5, 6, 6, 6, 6, 6, 2]
+        ]
+        self.library.addPuzzle(puzzle: Puzzle(board: board2))
     }
     
     func clickCell(r: Int, c: Int) {
@@ -72,7 +81,12 @@ class GameModel: ObservableObject {
         if(isLamp(r: r, c: c)) {
             return true
         }
-        return searchDirection(r: r, c: c, d: .N) || searchDirection(r: r, c: c, d: .S) || searchDirection(r: r, c: c, d: .E) || searchDirection(r: r, c: c, d: .W)
+        print(r, c)
+        searchDirection(r: r, c: c, d: .N) ? print("found a lamp to the North") : print("no lamp to the North")
+        searchDirection(r: r, c: c, d: .E) ? print("found a lamp to the East") : print("no lamp to the East")
+        searchDirection(r: r, c: c, d: .W) ? print("found a lamp to the West") : print("no lamp to the West")
+        searchDirection(r: r, c: c, d: .S) ? print("found a lamp to the South") : print("no lamp to the South")
+        return searchDirection(r: r, c: c, d: .N) || searchDirection(r: r, c: c, d: .E) || searchDirection(r: r, c: c, d: .W) || searchDirection(r: r, c: c, d: .S)
     }
     
     func isLamp(r: Int, c: Int) -> Bool {
@@ -84,9 +98,6 @@ class GameModel: ObservableObject {
     }
     
     func isLampIllegal(r: Int, c: Int) -> Bool {
-        if(isLamp(r: r, c: c)) {
-            return true
-        }
         return searchDirection(r: r, c: c, d: .N) || searchDirection(r: r, c: c, d: .S) || searchDirection(r: r, c: c, d: .E) || searchDirection(r: r, c: c, d: .W)
     }
     
@@ -156,8 +167,8 @@ class GameModel: ObservableObject {
     }
 
     func searchDirection(r: Int, c: Int, d: Direction) -> Bool {
-        var r_new: Int = 0
-        var c_new: Int = 0
+        var r_new: Int = r
+        var c_new: Int = c
         
         switch d {
         case .N:
@@ -174,22 +185,24 @@ class GameModel: ObservableObject {
             break
         }
         
-        if(c_new < 0 || c_new >= getActivePuzzle().getWidth() || r_new < 0 || r_new >= getActivePuzzle().getHeight()) {
+        if(c_new < 0 || c_new >= 7 || r_new < 0 || r_new >= 7) {
             return false
-        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CORRIDOR) {
+        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CLUE) {
             return false
         } else {
             if (isLamp(r: r_new, c: c_new)){
+                print("found a lamp at: \(r_new), \(c_new), searching direction \(d)")
                 return true
             } else {
+                print("No lamp found in direction \(d) from \(r), \(c); searching (r_new), \(c_new)")
                 return searchDirection(r: r_new, c: c_new, d: d)
             }
         }
     }
     
     func checkDirection(r: Int, c: Int, d: Direction) -> Int {
-        var r_new: Int = 0
-        var c_new: Int = 0
+        var r_new: Int = r
+        var c_new: Int = c
         
         switch d {
         case .N:
@@ -206,9 +219,9 @@ class GameModel: ObservableObject {
             break
         }
         
-        if(c_new < 0 || c_new >= getActivePuzzle().getWidth() || r_new < 0 || r_new >= getActivePuzzle().getHeight()) {
+        if(c_new < 0 || c_new >= 7 || r_new < 0 || r_new >= 7) {
             return 0
-        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CORRIDOR) {
+        } else if (getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.WALL || getActivePuzzle().getCellType(r: r_new, c: c_new) == CellType.CLUE) {
             return 0
         } else {
             if (isLamp(r: r_new, c: c_new)){
