@@ -16,7 +16,7 @@ struct EasyLevel: View {
     var timeText: String {
         
         let minutes = model.time_taken / (60 * 100)
-        let seconds = model.time_taken / 100
+        let seconds = (model.time_taken) / 100 % 60
         let mseconds = model.time_taken % 100
 
         let minutesString = String(format: "%02d", minutes)
@@ -26,7 +26,7 @@ struct EasyLevel: View {
         return model.isSolved() ? "\(minutesString):\(secondsString).\(msecondsString)" : "\(minutesString):\(secondsString)"
     }
     
-    let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 0.006, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack {
@@ -110,7 +110,7 @@ struct EasyLevel: View {
                                     }
                             }
                             ForEach((model.progress + 1...model.getPuzzleLibrarySize() - 1), id: \.self) { number in
-                                    Text("Puzzle \(number + 1)")
+                                    Text("Puzzle \(number)")
                                         .foregroundColor(.gray)
                             }
                         }
