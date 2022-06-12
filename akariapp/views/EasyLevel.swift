@@ -100,14 +100,18 @@ struct EasyLevel: View {
                     }
                     .sheet(isPresented: $showSheet) {
                         List {
-                            ForEach((1...model.getPuzzleLibrarySize()), id: \.self) { number in
+                            ForEach((0...model.progress), id: \.self) { number in
                                     Button(action: {
-                                        model.setActivePuzzleIndex(index: number - 1)
+                                        model.setActivePuzzleIndex(index: number)
                                         showSheet.toggle()
                                         }) {
-                                            Text("Puzzle \(number)")
+                                            Text("Puzzle \(number + 1)")
                                                 .foregroundColor(.black)
                                     }
+                            }
+                            ForEach((model.progress + 1...model.getPuzzleLibrarySize() - 1), id: \.self) { number in
+                                    Text("Puzzle \(number + 1)")
+                                        .foregroundColor(.gray)
                             }
                         }
                     }
@@ -116,7 +120,7 @@ struct EasyLevel: View {
                         model.clickNextPuzzle()
                         }) {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(.black)
+                                .foregroundColor(model.canProgress() ? .black : .gray)
                                 .frame(width: 50, height: 50)
                                 .overlay(
                                     Image(systemName: "arrow.right")

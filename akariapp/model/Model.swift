@@ -14,6 +14,7 @@ class GameModel: ObservableObject {
     private var curr: Int
     @Published var lamps: [[Int]]
     @Published var time_taken: Int
+    @Published var progress = 0
     
     init() {
         self.curr = 0
@@ -35,6 +36,7 @@ class GameModel: ObservableObject {
     }
     
     func fullReset() {
+        self.progress = 0
         self.curr = 0
         self.library = PuzzleLibrary()
         self.lamps = [
@@ -61,11 +63,14 @@ class GameModel: ObservableObject {
                 addLamp(r: r, c: c)
             }
         }
+        if (!canProgress() && isSolved()) {
+            progress += 1
+        }
     }
     
     func clickNextPuzzle() {
         let current = getActivePuzzleIndex()
-        if(current + 1 < getPuzzleLibrarySize()) {
+        if(current + 1 < getPuzzleLibrarySize() && canProgress()) {
             setActivePuzzleIndex(index: current + 1)
         }
     }
@@ -208,6 +213,10 @@ class GameModel: ObservableObject {
                 return searchDirection(r: r_new, c: c_new, d: d)
             }
         }
+    }
+    
+    func canProgress() -> Bool {
+        return getActivePuzzleIndex() < progress
     }
     
     func checkDirection(r: Int, c: Int, d: Direction) -> Int {
