@@ -14,6 +14,7 @@ struct MainView: View {
             MainMenu()
                 .navigationBarTitle("")
                 .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
         }
     }
 }

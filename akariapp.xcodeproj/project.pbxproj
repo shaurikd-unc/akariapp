@@ -16,6 +16,7 @@
 		44A038F028296F9000A153BA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038EF28296F9000A153BA /* Model.swift */; };
 		44A038F3282985E500A153BA /* LevelSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038F2282985E500A153BA /* LevelSelect.swift */; };
 		44A038F52829872900A153BA /* EasyLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A038F42829872900A153BA /* EasyLevel.swift */; };
+		44DCFBE928551C6900BE0224 /* puzzles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DCFBE828551C6900BE0224 /* puzzles.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		44A038EF28296F9000A153BA /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		44A038F2282985E500A153BA /* LevelSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelect.swift; sourceTree = "<group>"; };
 		44A038F42829872900A153BA /* EasyLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyLevel.swift; sourceTree = "<group>"; };
+		44DCFBE828551C6900BE0224 /* puzzles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = puzzles.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 		44A038F12829725B00A153BA /* level_storage */ = {
 			isa = PBXGroup;
 			children = (
+				44DCFBE828551C6900BE0224 /* puzzles.swift */,
 			);
 			path = level_storage;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				44A038F028296F9000A153BA /* Model.swift in Sources */,
 				44891CDF282858B10073A489 /* ContentView.swift in Sources */,
 				44A038ED28296E5100A153BA /* Main.swift in Sources */,
+				44DCFBE928551C6900BE0224 /* puzzles.swift in Sources */,
 				44A038EB282965D800A153BA /* MainMenu.swift in Sources */,
 				44891CDD282858B10073A489 /* akariappApp.swift in Sources */,
 			);

@@ -8,10 +8,24 @@
 import SwiftUI
 
 struct EasyLevel: View {
+        
+    @ObservedObject var model: GameModel
+    @State private var showSheet: Bool = false
+    @State private var logoDragAmount = CGSize.zero
     
-    @ObservedObject var model = GameModel()
+    var timeText: String {
+        
+        let minutes = model.time_taken / (60 * 100)
+        let seconds = model.time_taken / 100
+        let mseconds = model.time_taken % 100
+
+        let minutesString = String(format: "%02d", minutes)
+        let secondsString = String(format: "%02d", seconds)
+        let msecondsString = String(format: "%02d", mseconds)
+
+        return model.isSolved() ? "\(minutesString):\(secondsString).\(msecondsString)" : "\(minutesString):\(secondsString)"
+    }
     
-    @State var time_taken = 0
     let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -19,18 +33,48 @@ struct EasyLevel: View {
             LinearGradient(colors: [Color("Background")], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
             VStack {
-                Text("\(Int(time_taken / 100)):\(time_taken % 100) secs")
+                Image("title_logo")
+                    .resizable()
+                    .scaledToFit()
+                    .offset(logoDragAmount)
+                    .gesture(
+                        DragGesture()
+                            .onChanged {logoDragAmount = $0.translation}
+                            .onEnded { _ in
+                                withAnimation {
+                                    logoDragAmount = .zero
+                                }
+                            }
+                    )
+                HStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.black)
+                        .frame(width: 75, height: 50)
+                        .overlay(
+                            Text("Puzzle \(model.getActivePuzzleIndex() + 1)")
+                                .font(.system(size: 16))
+                                .foregroundColor(.white)
+                        )
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(model.isSolved() ? .green : .black)
+                        .frame(width: 150, height: 50)
+                        .overlay(
+                            Text(timeText)
+                                .font(.system(size: 16))
+                                .foregroundColor(.white)
+                        )
+                        .animation(.default, value: model.isSolved())
+                }
+                EasyGameGrid(model: model)
                     .onReceive(timer) { _ in
                         if !model.isSolved() {
-                            time_taken += 1
+                            model.time_taken += 1
                         }
                     }
-                EasyGameGrid(model: model)
                     .padding()
                 HStack {
                     Button(action: {
                         model.resetPuzzle()
-                        time_taken = 0
                         }) {
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(.black)
@@ -42,16 +86,31 @@ struct EasyLevel: View {
                                 )
                     }
                     
-                    NavigationLink(destination: Text("tbd - easy level select"), label: {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(.black)
-                                .frame(width: 200, height: 50)
-                                .overlay(
-                                    Text("Levels")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.white)
-                                )
-                    })
+                    Button(action: {
+                        showSheet.toggle()
+                    }) {
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.black)
+                            .frame(width: 200, height: 50)
+                            .overlay(
+                                Text("Levels")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                            )
+                    }
+                    .sheet(isPresented: $showSheet) {
+                        List {
+                            ForEach((1...model.getPuzzleLibrarySize()), id: \.self) { number in
+                                    Button(action: {
+                                        model.setActivePuzzleIndex(index: number - 1)
+                                        showSheet.toggle()
+                                        }) {
+                                            Text("Puzzle \(number)")
+                                                .foregroundColor(.black)
+                                    }
+                            }
+                        }
+                    }
                     
                     Button(action: {
                         model.clickNextPuzzle()
@@ -98,17 +157,20 @@ struct EasyGameGrid: View {
                                             )
                                     }
                             case .CLUE:
-                                Rectangle()
+                                RoundedRectangle(cornerRadius: 0)
+                                    .stroke(.black, lineWidth: 2)
                                     .frame(width: 45, height: 45)
-                                    .foregroundColor(model.isClueSatisfied(r: r, c: c) ? .black : .blue)
+                                    .background(model.isClueSatisfied(r: r, c: c) ? .black : .blue)
                                     .overlay(
                                         Text("\(model.getActivePuzzle().getClue(r: r, c: c))")
                                             .font(.system(size: 16))
                                             .foregroundColor(.white)
                                     )
                             case .WALL:
-                                Rectangle()
+                                RoundedRectangle(cornerRadius: 0)
+                                    .stroke(.black, lineWidth: 2)
                                     .frame(width: 45, height: 45)
+                                    .background(.black)
                         }
                     }
                 }

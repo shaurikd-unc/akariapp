@@ -10,9 +10,10 @@ import SwiftUI
 import Combine
 
 class GameModel: ObservableObject {
-    private var library: PuzzleLibrary
+    public var library: PuzzleLibrary
     private var curr: Int
     @Published var lamps: [[Int]]
+    @Published var time_taken: Int
     
     init() {
         self.curr = 0
@@ -26,26 +27,30 @@ class GameModel: ObservableObject {
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0]
         ]
-        let board1 = [
-            [6, 6, 6, 6, 1, 6, 6],
-            [6, 6, 6, 5, 6, 6, 6],
-            [0, 6, 6, 6, 6, 6, 6],
-            [6, 5, 6, 6, 6, 4, 6],
-            [6, 6, 6, 6, 6, 6, 5],
-            [6, 6, 6, 2, 6, 6, 6],
-            [6, 6, 5, 6, 6, 6, 6]
+        let puzzleStorage = PuzzleStorage()
+        for puzzle in puzzleStorage.puzzles {
+            self.library.addPuzzle(puzzle: Puzzle(board: puzzle))
+        }
+        self.time_taken = 0
+    }
+    
+    func fullReset() {
+        self.curr = 0
+        self.library = PuzzleLibrary()
+        self.lamps = [
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
         ]
-        self.library.addPuzzle(puzzle: Puzzle(board: board1))
-        let board2 = [
-            [5, 6, 6, 6, 6, 6, 1],
-            [6, 6, 6, 6, 0, 6, 6],
-            [6, 5, 6, 6, 6, 6, 6],
-            [6, 6, 6, 1, 6, 6, 6],
-            [6, 6, 6, 6, 6, 0, 6],
-            [6, 6, 1, 6, 6, 6, 6],
-            [5, 6, 6, 6, 6, 6, 2]
-        ]
-        self.library.addPuzzle(puzzle: Puzzle(board: board2))
+        let puzzleStorage = PuzzleStorage()
+        for puzzle in puzzleStorage.puzzles {
+            self.library.addPuzzle(puzzle: Puzzle(board: puzzle))
+        }
+        self.time_taken = 0
     }
     
     func clickCell(r: Int, c: Int) {
@@ -110,8 +115,11 @@ class GameModel: ObservableObject {
     }
     
     func setActivePuzzleIndex(index: Int) {
+        getActivePuzzle().lamps = lamps
+        getActivePuzzle().time_taken = time_taken
         curr = index
-        resetPuzzle()
+        lamps = getActivePuzzle().lamps
+        time_taken = getActivePuzzle().time_taken
     }
 
     func getPuzzleLibrarySize() -> Int {
@@ -124,6 +132,7 @@ class GameModel: ObservableObject {
                 lamps[i][j] = 0
             }
         }
+        time_taken = 0
     }
     
     func isSolved() -> Bool {
@@ -150,6 +159,7 @@ class GameModel: ObservableObject {
                 }
             }
         }
+        getActivePuzzle().best_time = min(getActivePuzzle().best_time, time_taken)
         return true
     }
     
@@ -255,6 +265,17 @@ class PuzzleLibrary {
 
 class Puzzle {
     private var board: [[Int]]
+    public var lamps: [[Int]] = [
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
+    ]
+    public var time_taken: Int = 0
+    public var best_time: Int = Int.max
     
     init(board: [[Int]]) {
         self.board = board
